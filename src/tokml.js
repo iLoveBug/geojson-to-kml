@@ -101,7 +101,8 @@ function timestamp(_, options) {
 // https://developers.google.com/kml/documentation/kmlreference#geometry
 var geometry = {
   Point: function (_) {
-    return tag("Point", tag("coordinates", _.coordinates.join(",")));
+    const coordinates = _.coordinates.length === 2 : [..._coordinates, 50] : _.coordinates
+    return tag("Point", tag("extrude", "1") + tag("altitudeMode", "relativeToGround") + tag("coordinates", coordinates.join(",")));
   },
   LineString: function (_) {
     return tag("LineString", tag("coordinates", linearring(_.coordinates)));
@@ -211,7 +212,8 @@ function hasMarkerStyle(_) {
 function markerStyle(_, styleHash) {
   return tag(
     "Style",
-    tag("IconStyle", tag("Icon", tag("href", iconUrl(_)))) + iconSize(_),
+    tag("LabelStyle", tag("scale", "2")),
+    tag("IconStyle", tag("scale", "2") + tag("Icon", tag("href", iconUrl(_)))) + iconSize(_),
     [["id", styleHash]]
   );
 }
